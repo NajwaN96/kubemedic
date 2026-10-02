@@ -1,0 +1,56 @@
+{
+  "namespace": "taskflow",
+  "pod": {
+    "metadata": {
+      "name": "taskflow-api-6c4b8d9f7-q9w2n",
+      "namespace": "taskflow",
+      "creationTimestamp": "2026-09-30T12:10:00Z",
+      "ownerReferences": [
+        {"kind": "ReplicaSet", "name": "taskflow-api-6c4b8d9f7", "uid": "rs-image"}
+      ]
+    },
+    "spec": {
+      "nodeName": "worker-1",
+      "containers": [
+        {"name": "api", "image": "taskflow-api:does-not-exist"}
+      ]
+    },
+    "status": {
+      "phase": "Pending",
+      "conditions": [
+        {"type": "Ready", "status": "False", "reason": "ContainersNotReady", "message": "containers with unready status: [api]"}
+      ],
+      "containerStatuses": [
+        {
+          "name": "api",
+          "ready": false,
+          "restartCount": 0,
+          "image": "taskflow-api:does-not-exist",
+          "imageID": "",
+          "state": {
+            "waiting": {
+              "reason": "ImagePullBackOff",
+              "message": "Back-off pulling image \"taskflow-api:does-not-exist\""
+            }
+          }
+        }
+      ]
+    }
+  },
+  "events": [
+    {
+      "type": "Warning",
+      "reason": "Failed",
+      "message": "Failed to pull image \"taskflow-api:does-not-exist\": rpc error: code = NotFound desc = failed to resolve reference \"taskflow-api:does-not-exist\": not found",
+      "count": 4,
+      "lastTimestamp": "2026-09-30T12:11:00Z",
+      "involvedObject": {"kind": "Pod", "name": "taskflow-api-6c4b8d9f7-q9w2n", "namespace": "taskflow"}
+    }
+  ],
+  "deployment": {
+    "metadata": {"name": "taskflow-api", "namespace": "taskflow"},
+    "spec": {"replicas": 2},
+    "status": {"replicas": 2, "readyReplicas": 1}
+  },
+  "logs": {"api": {"current": "", "previous": ""}}
+}

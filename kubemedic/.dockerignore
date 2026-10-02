@@ -1,0 +1,8 @@
+.venv
+__pycache__
+.pytest_cache
+tests
+*.db
+.env
+Dockerfile
+README.md

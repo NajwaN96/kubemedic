@@ -1,0 +1,16 @@
+# Single demo volume. This is not a replicated or highly available database.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: taskflow-postgres-data
+  namespace: taskflow
+  labels:
+    app.kubernetes.io/name: taskflow
+    app.kubernetes.io/component: database
+    app.kubernetes.io/part-of: taskflow
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi

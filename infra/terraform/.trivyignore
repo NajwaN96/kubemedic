@@ -1,0 +1,6 @@
+# AWS-0039 wants envelope encryption for Kubernetes secrets.
+# That block requires a customer-managed KMS key, which is a monthly charge.
+# This portfolio does not define a KMS key. ECR uses AES256 and the node
+# root volume uses the AWS-managed EBS key instead.
+# Do not add IDs here to hide a public endpoint, a public address, or 0.0.0.0/0 ingress.
+AWS-0039

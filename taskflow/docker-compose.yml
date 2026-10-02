@@ -1,0 +1,103 @@
+name: taskflow
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: taskflow-postgres
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME:-taskflow}
+      POSTGRES_USER: ${DATABASE_USER:-taskflow}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:?Set DATABASE_PASSWORD in taskflow/.env}
+    volumes:
+      - taskflow-pgdata:/var/lib/postgresql/data
+    ports:
+      - "127.0.0.1:41823:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+    restart: unless-stopped
+
+  api:
+    build:
+      context: ./backend
+    image: taskflow-api:local
+    container_name: taskflow-api
+    environment:
+      DATABASE_HOST: postgres
+      DATABASE_PORT: "5432"
+      DATABASE_NAME: ${DATABASE_NAME:-taskflow}
+      DATABASE_USER: ${DATABASE_USER:-taskflow}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD:?Set DATABASE_PASSWORD in taskflow/.env}
+      FAULT_INJECTION_ENABLED: ${FAULT_INJECTION_ENABLED:-false}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      SERVICE_NAME: taskflow-api
+    ports:
+      - "127.0.0.1:41822:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/ready')",
+        ]
+      interval: 10s
+      timeout: 10s
+      retries: 8
+      start_period: 15s
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+    image: taskflow-frontend:local
+    container_name: taskflow-frontend
+    ports:
+      - "127.0.0.1:41821:8080"
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+
+  kubemedic:
+    profiles: ["kubemedic"]
+    build:
+      context: ../kubemedic
+      dockerfile: Dockerfile
+    image: kubemedic:local
+    container_name: kubemedic
+    environment:
+      KUBEMEDIC_NAMESPACE: taskflow
+      KUBEMEDIC_DEMO_MODE: "true"
+      KUBEMEDIC_AI_ENABLED: "false"
+      KUBEMEDIC_REMEDIATION_ENABLED: "false"
+      KUBEMEDIC_WATCH_ENABLED: "false"
+      KUBEMEDIC_DB_PATH: /data/kubemedic.db
+      KUBEMEDIC_INCIDENT_COOLDOWN_SECONDS: "300"
+      KUBEMEDIC_LOG_TAIL_LINES: "100"
+    ports:
+      - "127.0.0.1:41832:8080"
+    volumes:
+      - kubemedic-data:/data
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/health')",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+
+volumes:
+  taskflow-pgdata:
+  kubemedic-data:

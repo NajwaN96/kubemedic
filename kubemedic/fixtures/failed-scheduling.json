@@ -1,0 +1,45 @@
+{
+  "namespace": "taskflow",
+  "pod": {
+    "metadata": {
+      "name": "taskflow-api-9f2e1d0c8-p5n6r",
+      "namespace": "taskflow",
+      "creationTimestamp": "2026-09-30T12:40:00Z",
+      "ownerReferences": [
+        {"kind": "ReplicaSet", "name": "taskflow-api-9f2e1d0c8", "uid": "rs-sched"}
+      ]
+    },
+    "spec": {
+      "containers": [
+        {
+          "name": "api",
+          "image": "taskflow-api:local",
+          "resources": {"requests": {"cpu": "4", "memory": "8Gi"}}
+        }
+      ]
+    },
+    "status": {
+      "phase": "Pending",
+      "conditions": [
+        {"type": "PodScheduled", "status": "False", "reason": "Unschedulable", "message": "0/1 nodes are available: 1 Insufficient memory."}
+      ],
+      "containerStatuses": []
+    }
+  },
+  "events": [
+    {
+      "type": "Warning",
+      "reason": "FailedScheduling",
+      "message": "0/1 nodes are available: 1 Insufficient memory. preemption: 0/1 nodes are available: 1 No preemption victims found for incoming pod.",
+      "count": 12,
+      "lastTimestamp": "2026-09-30T12:41:00Z",
+      "involvedObject": {"kind": "Pod", "name": "taskflow-api-9f2e1d0c8-p5n6r", "namespace": "taskflow"}
+    }
+  ],
+  "deployment": {
+    "metadata": {"name": "taskflow-api", "namespace": "taskflow"},
+    "spec": {"replicas": 2},
+    "status": {"replicas": 2, "readyReplicas": 1}
+  },
+  "logs": {}
+}

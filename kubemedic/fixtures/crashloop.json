@@ -1,0 +1,73 @@
+{
+  "namespace": "taskflow",
+  "pod": {
+    "metadata": {
+      "name": "taskflow-api-7d8f9c6b8-xk2lp",
+      "namespace": "taskflow",
+      "creationTimestamp": "2026-09-30T12:00:00Z",
+      "ownerReferences": [
+        {"kind": "ReplicaSet", "name": "taskflow-api-7d8f9c6b8", "uid": "rs-api"}
+      ]
+    },
+    "spec": {
+      "nodeName": "worker-1",
+      "containers": [
+        {
+          "name": "api",
+          "image": "taskflow-api:local",
+          "resources": {"limits": {"memory": "256Mi"}, "requests": {"memory": "128Mi"}}
+        }
+      ]
+    },
+    "status": {
+      "phase": "Running",
+      "conditions": [
+        {"type": "Ready", "status": "False", "reason": "ContainersNotReady", "message": "containers with unready status: [api]"}
+      ],
+      "containerStatuses": [
+        {
+          "name": "api",
+          "ready": false,
+          "restartCount": 6,
+          "image": "taskflow-api:local",
+          "imageID": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "state": {
+            "waiting": {
+              "reason": "CrashLoopBackOff",
+              "message": "back-off 5m0s restarting failed container=api pod=taskflow-api-7d8f9c6b8-xk2lp_taskflow"
+            }
+          },
+          "lastState": {
+            "terminated": {
+              "exitCode": 1,
+              "reason": "Error",
+              "startedAt": "2026-09-30T12:04:00Z",
+              "finishedAt": "2026-09-30T12:04:02Z"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "events": [
+    {
+      "type": "Warning",
+      "reason": "BackOff",
+      "message": "Back-off restarting failed container api in pod taskflow-api-7d8f9c6b8-xk2lp_taskflow",
+      "count": 6,
+      "lastTimestamp": "2026-09-30T12:05:00Z",
+      "involvedObject": {"kind": "Pod", "name": "taskflow-api-7d8f9c6b8-xk2lp", "namespace": "taskflow"}
+    }
+  ],
+  "deployment": {
+    "metadata": {"name": "taskflow-api", "namespace": "taskflow"},
+    "spec": {"replicas": 2},
+    "status": {"replicas": 2, "readyReplicas": 1, "unavailableReplicas": 1}
+  },
+  "logs": {
+    "api": {
+      "current": "",
+      "previous": "database connection refused\npsycopg.OperationalError: connection to server at \"taskflow-postgres\", port 5432 failed: Connection refused\npostgresql://taskflow:super-secret-db-password@taskflow-postgres:5432/taskflow\npassword=super-secret-db-password\n"
+    }
+  }
+}

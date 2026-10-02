@@ -1,0 +1,49 @@
+# Optional. These rules target the ingress-nginx controller.
+# The rewrite annotation applies only to the API ingress, so the frontend
+# path is left unchanged. If the cluster has no Ingress controller, leave
+# these objects unused and port-forward svc/taskflow-frontend instead.
+# The frontend nginx config also proxies /api, so port-forward is enough.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: taskflow-frontend
+  namespace: taskflow
+  labels:
+    app.kubernetes.io/name: taskflow
+    app.kubernetes.io/component: frontend
+    app.kubernetes.io/part-of: taskflow
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: taskflow-frontend
+                port:
+                  number: 8080
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: taskflow-api
+  namespace: taskflow
+  labels:
+    app.kubernetes.io/name: taskflow
+    app.kubernetes.io/component: api
+    app.kubernetes.io/part-of: taskflow
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /api(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: taskflow-api
+                port:
+                  number: 8000

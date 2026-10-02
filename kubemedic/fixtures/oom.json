@@ -1,0 +1,73 @@
+{
+  "namespace": "taskflow",
+  "pod": {
+    "metadata": {
+      "name": "taskflow-api-5b7c8d9e6-m3k1p",
+      "namespace": "taskflow",
+      "creationTimestamp": "2026-09-30T12:20:00Z",
+      "ownerReferences": [
+        {"kind": "ReplicaSet", "name": "taskflow-api-5b7c8d9e6", "uid": "rs-oom"}
+      ]
+    },
+    "spec": {
+      "nodeName": "worker-2",
+      "containers": [
+        {
+          "name": "api",
+          "image": "taskflow-api:local",
+          "resources": {"limits": {"memory": "256Mi"}, "requests": {"memory": "128Mi"}}
+        }
+      ]
+    },
+    "status": {
+      "phase": "Running",
+      "conditions": [
+        {"type": "Ready", "status": "False", "reason": "ContainersNotReady", "message": "containers with unready status: [api]"}
+      ],
+      "containerStatuses": [
+        {
+          "name": "api",
+          "ready": false,
+          "restartCount": 4,
+          "image": "taskflow-api:local",
+          "imageID": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "state": {
+            "waiting": {
+              "reason": "CrashLoopBackOff",
+              "message": "back-off 2m40s restarting failed container=api pod=taskflow-api-5b7c8d9e6-m3k1p_taskflow"
+            }
+          },
+          "lastState": {
+            "terminated": {
+              "exitCode": 137,
+              "reason": "OOMKilled",
+              "startedAt": "2026-09-30T12:21:00Z",
+              "finishedAt": "2026-09-30T12:21:40Z"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "events": [
+    {
+      "type": "Warning",
+      "reason": "OOMKilling",
+      "message": "Memory cgroup out of memory: Killed process 42 (python) total-vm:280000kB",
+      "count": 4,
+      "lastTimestamp": "2026-09-30T12:21:40Z",
+      "involvedObject": {"kind": "Pod", "name": "taskflow-api-5b7c8d9e6-m3k1p", "namespace": "taskflow"}
+    }
+  ],
+  "deployment": {
+    "metadata": {"name": "taskflow-api", "namespace": "taskflow"},
+    "spec": {"replicas": 2},
+    "status": {"replicas": 2, "readyReplicas": 1}
+  },
+  "logs": {
+    "api": {
+      "current": "",
+      "previous": "INFO taskflow.api serving\n"
+    }
+  }
+}

@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: taskflow-api-config
+  namespace: taskflow
+  labels:
+    app.kubernetes.io/name: taskflow
+    app.kubernetes.io/component: api
+    app.kubernetes.io/part-of: taskflow
+data:
+  DATABASE_HOST: taskflow-postgres
+  DATABASE_PORT: "5432"
+  DATABASE_NAME: taskflow
+  DATABASE_USER: taskflow
+  FAULT_INJECTION_ENABLED: "false"
+  LOG_LEVEL: INFO
+  SERVICE_NAME: taskflow-api

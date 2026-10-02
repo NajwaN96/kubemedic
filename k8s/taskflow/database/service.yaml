@@ -1,0 +1,20 @@
+# Headless service. StatefulSet requires serviceName, and the API reaches
+# PostgreSQL at taskflow-postgres inside the namespace.
+apiVersion: v1
+kind: Service
+metadata:
+  name: taskflow-postgres
+  namespace: taskflow
+  labels:
+    app.kubernetes.io/name: taskflow
+    app.kubernetes.io/component: database
+    app.kubernetes.io/part-of: taskflow
+spec:
+  clusterIP: None
+  selector:
+    app.kubernetes.io/name: taskflow
+    app.kubernetes.io/component: database
+  ports:
+    - name: postgres
+      port: 5432
+      targetPort: postgres
