@@ -1,5 +1,10 @@
 # KubeMedic
 
+## Reproducible AI explanation evaluation
+
+A [16-case synthetic evaluation](kubemedic/evaluation/README.md) now exercises the production rules, sanitized AI payload, prompt, and response parser. It includes sparse evidence, conflicting signals, prompt injection, strict response checks, and replayable scoring. The [results summary](kubemedic/evaluation/RESULTS.md) separates the measured rules baseline from provider availability. **No successful live AI answers are available yet:** the initial provider attempt returned exhausted quota. This is not a claim that AI improves diagnosis.
+
+
 KubeMedic is a Kubernetes reliability engineering lab that detects workload failures, collects operational evidence, tracks incidents through recovery, and supports human-approved remediation.
 
 It uses [TaskFlow](#taskflow) as a real application workload. The lab shows Kubernetes operations, observability, incident response, safe remediation, DevSecOps, and an infrastructure-as-code design that is not provisioned.
