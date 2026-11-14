@@ -1,10 +1,18 @@
 {
   "benchmark_version": "1.0",
   "mode": "replay",
-  "created_at": "2026-11-14T18:01:01.047286+00:00",
+  "created_at": "2026-11-14T18:05:46.943330+00:00",
   "dataset_sha256": "2a7b316922ff13c2dc3a7d326fed6f15db584900cfe09734d7dc7b5db403aa4b",
   "prompt_sha256": "c1862d9ca2113e58405da367bfc0aef0560ac4ef6bc5af28a3943f54c779d2d4",
-  "evaluator_sha256": "adec48f47f4b7db83904f3575afd899c65511454d4e319fe5236070d3757a828",
+  "evaluator_sha256": "acb73b64a12144ad9782ce448198f8ac3b9f340958d014e7daac30e6fa99b09e",
+  "production_components_sha256": {
+    "app/investigation/analyzer.py": "4e1970cfa193fe108fb43e7d1321c1f61615903b1c2637da9d1262f5a35f215c",
+    "app/ai/payload.py": "b181ee452fbb6b4b24bcd7e99468c257f68f0e49e7746e10037c6fcc6abeb190",
+    "app/ai/sanitize.py": "50ec1da21391ce156750249763ca7c78043b80a3b6781ecbd3a2d6bccbcdc5ed",
+    "app/ai/openai_analyzer.py": "b7b790c4cb9f1835ef67db644280a5f52119d67329b0066271e7613edb8b78e9"
+  },
+  "dependency_lock_sha256": "26f4e703703bb079bb2e323e23c795bdf53173748204808c101f030111226d36",
+  "python_version": "3.12.14",
   "replay_source": {
     "capture_sha256": "77d6f3acfe2530be0e7636909f7a7209aef64e46af6d43365b43563bc67d6fca",
     "source_mode": "live",
