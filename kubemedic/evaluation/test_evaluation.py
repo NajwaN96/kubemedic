@@ -107,6 +107,8 @@ def test_replay_refuses_hash_mismatch_and_missing_case(tmp_path):
     with pytest.raises(ValueError,match='hash mismatch'):run(args)
     bad=copy.deepcopy(r);bad['cases'].pop();path.write_text(json.dumps(bad))
     with pytest.raises(ValueError,match='every case exactly once'):run(args)
+    bad=copy.deepcopy(r);bad['cases'][0]['payload_sha256']='wrong';path.write_text(json.dumps(bad))
+    with pytest.raises(ValueError,match='payload hash mismatch'):run(args)
 
 
 def test_terminal_quota_stops_calls_and_marks_unattempted_cases(monkeypatch):

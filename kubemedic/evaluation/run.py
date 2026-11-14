@@ -184,6 +184,8 @@ def run(args) -> dict:
         replay = replay["cases"]
         if [r["id"] for r in replay] != [c["id"] for c in cases]:
             raise ValueError("Replay must contain every case exactly once, in dataset order")
+        if any(r.get("payload_sha256") != hashlib.sha256(prepared[i][2].encode()).hexdigest() for i,r in enumerate(replay)):
+            raise ValueError("Replay payload hash mismatch; production components changed")
     if args.mode == "live":
         if not 0 < args.budget_usd <= 1:
             raise ValueError("Live mode requires 0 < --budget-usd <= 1")
@@ -258,6 +260,11 @@ def run(args) -> dict:
             "created_at":datetime.now(timezone.utc).isoformat(),
             "dataset_sha256":hashlib.sha256(dataset_bytes).hexdigest(), "prompt_sha256":prompt_hash,
             "evaluator_sha256":hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+            "production_components_sha256":{
+                path:hashlib.sha256((Path(__file__).parent.parent/path).read_bytes()).hexdigest()
+                for path in ["app/investigation/analyzer.py","app/ai/payload.py","app/ai/sanitize.py","app/ai/openai_analyzer.py"]},
+            "dependency_lock_sha256":hashlib.sha256(Path(__file__).with_name("requirements.lock.txt").read_bytes()).hexdigest(),
+            "python_version":sys.version.split()[0],
             "replay_source": replay_source,
             "requested_model":MODEL if args.mode == "live" else (replay_source["requested_model"] if replay_source else None),
             "budget_usd":args.budget_usd if args.mode == "live" else None,
